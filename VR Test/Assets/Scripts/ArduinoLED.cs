@@ -9,7 +9,6 @@ using System.Linq;
 
 public class ArduinoLED : MonoBehaviour
 {
-
     SerialPort sp;
     int frame;
 
@@ -17,54 +16,68 @@ public class ArduinoLED : MonoBehaviour
     {
         sp = new SerialPort("/dev/tty.usbserial-110", 115200);
         sp.Open();
-
         frame = 0;
     }
-
-
 
     void Update()
     {
         if (frame++ % 8 == 0)
         {
-            if (Input.GetKey(KeyCode.F))
+            if (Input.GetKey(KeyCode.W))
             {
                 print("forwards");
-                forward();
-
+                rotateForward();
             }
-            else if (Input.GetKey(KeyCode.B))
+            if (Input.GetKey(KeyCode.S))
             {
                 print("backwards");
-                backward();
+                rotateBackward();
+            }
+
+            if (Input.GetKey(KeyCode.D))
+            {
+                print("clockwise");
+                rotateYClockwise();
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                print("counter");
+                rotateYCounter();
             }
         }
     }
 
-    void forward()
+    void rotateForward()
     {
-        
         transform.Rotate(1f, 0f, 0f);
         float tmp = inverseLerp(transform.rotation.x);
-        sp.WriteLine(tmp.ToString());
+        sp.WriteLine("x" + tmp.ToString());
     }
 
-    void backward()
+    void rotateBackward()
     {
         transform.Rotate(-1f, 0f, 0f);
         float tmp = inverseLerp(transform.rotation.x);
-        sp.WriteLine(tmp.ToString());
+        sp.WriteLine("x" + tmp.ToString());
     }
 
-    void OnMessageArrived(string msg)
+    void rotateYClockwise()
     {
-        return;
+        transform.Rotate(0f, 1f, 0f);
+        float tmp = inverseLerp(transform.rotation.y);
+        sp.WriteLine("y" + tmp.ToString());
+    }
 
+    void rotateYCounter()
+    {
+        transform.Rotate(0f, -1f, 0f);
+        float tmp = inverseLerp(transform.rotation.y);
+        sp.WriteLine("y" + tmp.ToString());
     }
 
     float inverseLerp(float currRotation)
     {
-        return (currRotation+ 1f) / 2f ;
+        return (currRotation + 1f) / 2f;
     }
 
 }

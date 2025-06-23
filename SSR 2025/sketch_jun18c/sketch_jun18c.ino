@@ -24,9 +24,13 @@ Adafruit_seesaw ss;
 seesaw_NeoPixel sspixel = seesaw_NeoPixel(1, SS_NEOPIX, NEO_GRB + NEO_KHZ800);
 
 int32_t encoder_position;
+int switchPin = 2;
+int switchState;
+int prevSwitchState;
 
 void setup() {
   Serial.begin(115200);
+  pinMode(switchPin, INPUT);
 
   while (!Serial) delay(10);
 
@@ -66,49 +70,64 @@ void setup() {
 }
 
 int xScale;
+int yScale;
 int frame;
 bool readAnything;
-float unityFloat;
+float unityFloatX = 0.5;
+float unityFloatY = 0.5;
 
 void loop() {
-  
-    int32_t new_position = ss.getEncoderPosition();
-    // did we move arounde?
-    if (new_position > 50) { ss.setEncoderPosition(50); }
-    if (new_position < -50) { ss.setEncoderPosition(-50); }
-    if (encoder_position != new_position) {
-      Serial.println(clampedInverseLerp(-50.0, 50.0, new_position)); // FORNOW (clamp is unnecessary)
-      encoder_position = new_position;      // and save for next round
-    }
+  int32_t new_position = ss.getEncoderPosition();
 
-//  if (Serial.available() >= 4) {
-//    float unitScale;
-//    Serial.readBytes((byte *) &unitScale, 4);
-//    xScale = round(unitScale * 128);
-//    readAnything = true;
-//  }
+  //ROTATION OF KNOB FOR SIZE OF OBJECT IN UNITY
+  if (new_position > 50) {
+    ss.setEncoderPosition(50);
+    new_position = 50;
+  }
+  if (new_position < -50) {
+    ss.setEncoderPosition(-50);
+    new_position = -50;
+  }
+
+  if (new_position != encoder_position) {
+    Serial.println(inverseLerp(-50.0, 50.0, new_position)); // FORNOW (clamp is unnecessary)
+    encoder_position = new_position;      // and save for next round
+  }
+
+  
+  prevSwitchState = switchState;
+  switchState = digitalRead(switchPin);
+  if (switchState != prevSwitchState) {
+    if (switchState == HIGH) {
+      Serial.println("sTrue");
+    } else if (switchState == LOW) {
+      Serial.println("sFalse");
+    }
+  }
 
   readSerial();
-  xScale = round(unityFloat * 128);
-  
+  xScale = round(unityFloatX * 128);
+  yScale = round(unityFloatY * 64);
 
   if (readAnything && (frame++ % 30 == 0)) {
     display.clearDisplay();
-    display.drawPixel(xScale, 32, SSD1306_WHITE);
+    display.drawPixel(xScale, yScale, SSD1306_WHITE);
     display.display();
   }
 }
 
-
 void readSerial() {
   if (Serial.available()) {
-    String unityData = Serial.readStringUntil('\n'); 
-    unityFloat = unityData.toFloat();
+    String unityData = Serial.readStringUntil('\n');
+    if (unityData[0] == 'x') {
+      unityFloatX = unityData.substring(1).toFloat();
+    } else {
+      unityFloatY = unityData.substring(1).toFloat();
+    }
     readAnything = true;
   }
 }
 
-float clampedInverseLerp(float l, float u, int32_t pos) {
-  float t = ((float)pos - l) / (u - l);
-  return min(1.0, max(0.0, t));
+float inverseLerp(float l, float u, int32_t pos) {
+  return ((float)pos - l) / (u - l);
 }

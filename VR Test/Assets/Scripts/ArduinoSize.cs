@@ -26,7 +26,7 @@ public class ArduinoSize : MonoBehaviour
         if (sp.BytesToRead != 0)
         {
             float currT = float.Parse(sp.ReadLine());
-            if (transform.localScale.x <= 5.0f & transform.localScale.x >= 0.25f)
+            if (transform.localScale.x <= 5.0f && transform.localScale.x >= 0.25f)
             {
                 float interScale = interpolate(currT, 5.0f, 0.25f);
                 transform.localScale = new Vector3(interScale, interScale, interScale);
