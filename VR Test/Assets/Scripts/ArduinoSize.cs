@@ -16,7 +16,7 @@ public class ArduinoSize : MonoBehaviour
 
     void Start()
     {
-        sp = new SerialPort("/dev/tty.usbserial-1120", 9600);
+        sp = new SerialPort("/dev/tty.usbserial-110", 115200);
         sp.Open();
 
     }

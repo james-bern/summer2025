@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO.Ports;
 using System.Net.Security;
 using System.Runtime.InteropServices;
@@ -14,7 +15,7 @@ public class ArduinoLED : MonoBehaviour
 
     void Start()
     {
-        sp = new SerialPort("/dev/tty.usbserial-1120", 115200);
+        sp = new SerialPort("/dev/tty.usbserial-110", 115200);
         sp.Open();
 
         frame = 0;
@@ -24,23 +25,46 @@ public class ArduinoLED : MonoBehaviour
 
     void Update()
     {
-        if ((frame++ % 8 == 0) && Input.GetKey(KeyCode.F))
+        if (frame++ % 8 == 0)
         {
-            transform.Rotate(1f, 0f, 0f);
-            float tmp = inverseLerp(transform.rotation.x);
-            print(tmp);
-            // sp.Write(tmp.ToString());
-            byte[] buffer = BitConverter.GetBytes(tmp);
-            print(buffer.Length);
+            if (Input.GetKey(KeyCode.F))
+            {
+                print("forwards");
+                forward();
 
-            sp.Write(buffer, 0, buffer.Length);
-            for (int i = 0;  i < 4; ++i) print(buffer[i]);
+            }
+            else if (Input.GetKey(KeyCode.B))
+            {
+                print("backwards");
+                backward();
+            }
         }
+    }
+
+    void forward()
+    {
+        
+        transform.Rotate(1f, 0f, 0f);
+        float tmp = inverseLerp(transform.rotation.x);
+        sp.WriteLine(tmp.ToString());
+    }
+
+    void backward()
+    {
+        transform.Rotate(-1f, 0f, 0f);
+        float tmp = inverseLerp(transform.rotation.x);
+        sp.WriteLine(tmp.ToString());
+    }
+
+    void OnMessageArrived(string msg)
+    {
+        return;
+
     }
 
     float inverseLerp(float currRotation)
     {
-        return (currRotation + 1f) / 2f;
+        return (currRotation+ 1f) / 2f ;
     }
 
 }
