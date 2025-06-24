@@ -1,7 +1,5 @@
-
 #include "Adafruit_seesaw.h"
 #include <seesaw_neopixel.h>
-
 
 #include <SPI.h>
 #include <Wire.h>
@@ -11,12 +9,12 @@
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 //OLED display height
 
-#define SS_SWITCH        24
-#define SS_NEOPIX        6
+#define SS_SWITCH 24
+#define SS_NEOPIX 6
 
-#define SEESAW_ADDR          0x36
+#define SEESAW_ADDR 0x36
 
-#define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+#define OLED_RESET -1 // Reset pin # (or -1 if sharing Arduino reset pin)
 #define SCREEN_ADDRESS 0x3D ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -94,7 +92,7 @@ void loop() {
     encoder_position = new_position;      // and save for next round
   }
 
-  
+
   prevSwitchState = switchState;
   switchState = digitalRead(switchPin);
   if (switchState != prevSwitchState) {
@@ -131,3 +129,4 @@ void readSerial() {
 float inverseLerp(float l, float u, int32_t pos) {
   return ((float)pos - l) / (u - l);
 }
+
