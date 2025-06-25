@@ -75,13 +75,10 @@ void loop()
   // update encoder position & LED after reading unity rotation
   if (readAnything && (frame % 30 == 0))
   {
-
     yRotationScale = round(unityRotationY * 180);
     myservo.write(yRotationScale);
     //myservo.write(sin(frame / 30.0) * 90 + 90);
   }
-
-
    frame++;
 }
 
