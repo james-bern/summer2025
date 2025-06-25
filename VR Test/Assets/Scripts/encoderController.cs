@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.IO.Ports;
-using System.Collections; 
+using System.Collections;
 public class encoderController : MonoBehaviour
 {
     SerialPort sp;
@@ -13,14 +13,14 @@ public class encoderController : MonoBehaviour
 
     void Start()
     {
-        sp = new SerialPort("/dev/tty.usbserial-110", 115200);
+        sp = new SerialPort("/dev/tty.usbserial-10", 115200);
         sp.Open();
         frame = 0;
     }
 
     void Update()
     {
-        if (frame++ % 8 == 0) 
+        if (frame++ % 8 == 0)
         {
             if (Input.GetKey(KeyCode.R))
             {
@@ -32,6 +32,14 @@ public class encoderController : MonoBehaviour
                 //print("L Pressed"); 
                 yRotate(0, -1, 0);
             }
+        }
+
+        if (sp.BytesToRead != 0)
+        {
+            string serialData = sp.ReadLine();
+                float serialRotateValue = float.Parse(serialData) * (maxAngle - minAngle);
+                //print("serial value to rotate by" + serialRotateValue);
+                yRotate(0, serialRotateValue, 0);
         }
     }
 
@@ -54,5 +62,10 @@ public class encoderController : MonoBehaviour
     float inverseLerp(float currRotation, float lower, float upper)
     {
         return (currRotation - lower) / (upper - lower);
+    }
+
+    float lerp(float tValue, float lower, float upper)
+    {
+        return lower + (tValue * (upper - lower));
     }
 }
