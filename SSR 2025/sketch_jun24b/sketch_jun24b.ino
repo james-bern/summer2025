@@ -32,7 +32,6 @@ void setup()
   Serial.begin(115200);
   myservo.attach(SERVO_PIN);
 
-
   while (!Serial)
     delay(10);
 
@@ -68,7 +67,6 @@ void setup()
 int frame;
 bool readAnything;
 float unityRotationY;
-
 
 void loop()
 {
@@ -110,7 +108,6 @@ void loop()
   
    frame++;
 }
-
 
 void readSerial()
 {
