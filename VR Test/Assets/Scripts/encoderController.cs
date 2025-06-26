@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.IO.Ports;
-using System.Collections;
+using System.Collections; 
+using System.Runtime.InteropServices;
+
 public class encoderController : MonoBehaviour
 {
     SerialPort sp;
@@ -13,7 +15,14 @@ public class encoderController : MonoBehaviour
 
     void Start()
     {
-        sp = new SerialPort("/dev/tty.usbserial-10", 115200);
+		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+		{
+			sp = new SerialPort("COM6", 115200);
+		}
+		else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+		{
+			sp = new SerialPort("/dev/tty.usbserial-110", 115200);
+		}
         sp.Open();
         frame = 0;
     }
