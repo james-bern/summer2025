@@ -6,10 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/SpatialAnchors.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 49009b2c719124b71a3b65e3d081f036,
       type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: a1451879e9fc64c5fae1a996e9519bb1,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 2dd96ebb2c953fe4b96303b9a5796514,
       type: 2}
